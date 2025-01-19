@@ -28,6 +28,6 @@ export class CommandBus {
         `Handler not found for command: ${command.constructor.name}`,
       )
     }
-    return handler.handle(command)
+    return handler.execute(command)
   }
 }

@@ -6,5 +6,5 @@ export interface ICommandHandler<
   I extends ICommandInput = C extends ICommand<infer I, any> ? I : never,
   O extends ICommandOutput = C extends ICommand<I, infer O> ? O : never,
 > {
-  handle(command: C): O | Promise<O>
+  execute(command: C): O | Promise<O>
 }

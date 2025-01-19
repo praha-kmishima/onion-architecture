@@ -10,7 +10,7 @@ import type {ICommandHandler} from './commandHandler'
 export class AddUserHandler implements ICommandHandler<AddUserCommand> {
   constructor(private userRepository: IUserRepository) {}
 
-  async handle(command: AddUserCommand): Promise<AddUserCommandOutput> {
+  async execute(command: AddUserCommand): Promise<AddUserCommandOutput> {
     const user: User = User.create({
       name: command.input.name,
       email: command.input.email,
