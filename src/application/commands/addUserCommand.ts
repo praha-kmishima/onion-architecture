@@ -1,16 +1,22 @@
+import type {UserDTO} from '../dto/userDTO'
 import type {ICommand} from './command'
 
-export interface AddUserCommandProps {
+export interface AddUserCommandInput {
   name: string
   email: string
 }
 
-export class AddUserCommand implements ICommand {
-  public readonly name: string
-  public readonly email: string
+export interface AddUserCommandOutput {
+  output: UserDTO
+}
 
-  constructor(props: AddUserCommandProps) {
-    this.name = props.name
-    this.email = props.email
+export class AddUserCommand
+  implements ICommand<AddUserCommandInput, AddUserCommandOutput>
+{
+  constructor(readonly input: AddUserCommandInput) {}
+  getOutputType(): AddUserCommandOutput {
+    throw new Error(
+      'This method is for type inference only and should not be called.',
+    )
   }
 }

@@ -1,24 +1,33 @@
-import type {ICommand} from '../commands/command'
+import type {ICommand, ICommandInput, ICommandOutput} from '../commands/command'
 import type {ICommandHandler} from '../handlers/commandHandler'
 
 export class CommandBus {
-  private handlers = new Map<string, ICommandHandler<ICommand>>()
+  // biome-ignore lint/suspicious/noExplicitAny: Arguments vary by command, so any is necessary
+  private handlers = new Map<string, ICommandHandler<ICommand<any, any>>>()
 
-  register<T extends ICommand>(
+  register<
+    C extends ICommand<I, O>,
     // biome-ignore lint/suspicious/noExplicitAny: Arguments vary by command, so any is necessary
-    commandType: new (...args: any[]) => T,
-    handler: ICommandHandler<T>,
-  ): void {
-    this.handlers.set(commandType.name, handler as ICommandHandler<ICommand>)
+    I extends ICommandInput = C extends ICommand<infer I, any> ? I : never,
+    O extends ICommandOutput = C extends ICommand<I, infer O> ? O : never,
+  >(commandType: new (input: I) => C, handler: ICommandHandler<C, I, O>): void {
+    this.handlers.set(commandType.name, handler)
   }
 
-  async execute<T extends ICommand>(command: T): Promise<unknown> {
-    const handler = this.handlers.get(command.constructor.name)
+  execute<
+    C extends ICommand<I, O>,
+    // biome-ignore lint/suspicious/noExplicitAny: Arguments vary by command, so any is necessary
+    I extends ICommandInput = C extends ICommand<infer I, any> ? I : never,
+    O extends ICommandOutput = C extends ICommand<I, infer O> ? O : never,
+  >(command: C): O | Promise<O> {
+    const handler = this.handlers.get(
+      command.constructor.name,
+    ) as ICommandHandler<C, I, O>
     if (!handler) {
       throw new Error(
         `Handler not found for command: ${command.constructor.name}`,
       )
     }
-    return await handler.handle(command)
+    return handler.handle(command)
   }
 }

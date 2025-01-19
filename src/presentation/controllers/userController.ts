@@ -12,10 +12,8 @@ export class UserController {
   }
 
   async listUsers(): Promise<void> {
-    const command = new ListUsersCommand()
-    const users: UserDTO[] = (await this.commandBus.execute(
-      command,
-    )) as UserDTO[]
+    const command = new ListUsersCommand({})
+    const {output: users} = await this.commandBus.execute(command)
 
     console.log('📄 User List:')
     for (const user of users) {
