@@ -10,3 +10,7 @@ $ npx ts-node src/index.ts
 🆔 ID: 4ca316e5-10fc-4337-9da4-e73f0c8670d5, 👤 Name: Alice, 📧 Email: alice@example.com
 🆔 ID: ad0178a7-9c3c-43b1-9ebe-615ba6ab502c, 👤 Name: Bob, 📧 Email: bob@example.com
 ```
+
+## 依存関係
+
+![alt text](./public/image.png)
